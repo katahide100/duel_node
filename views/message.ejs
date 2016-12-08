@@ -1,0 +1,9 @@
+<div class="body">
+<ul> 
+  <li v-for='message in messages'>{{message.body}}</li>
+</ul>
+
+<form v-on='submit: create'>
+  <input v-model='newMessage.body' type='text' placeholder='メッセージ (Enter で投稿)'>
+</form>
+</div>
