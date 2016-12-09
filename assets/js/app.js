@@ -1,27 +1,30 @@
 var mySocket = io.sails.connect();
-mySocket.get("/message", {}, function(messages) {
+// チャット取得
+io.socket.get("/message/find?limit=100", {}, function(messages) {
     for (var i = 0; i < messages.length; i++) {
-    $("#chat-timeline").append('<li>' + messages[i].name + '</li>');
+    $("#chat-timeline").append('<li>' + messages[i].body + '</li>');
     }
 });
-mySocket.on('message', function(message) {
-    console.log('message on');
+// チャット受信
+io.socket.on('message', function(message) {
     if (message.verb == "created") {
-    $("#chat-timeline").append('<li>' + message.data.name + '</li>');
+        $("#chat-timeline").append('<li>' + message.data.body + '</li>');
     }
 });
+// チャット投稿
 $('#chat-send-button').on('click', function() {
     var $text = $('#chat-textarea');
 
     var msg = $text.val();
     
-    mySocket.post("/message", {
-        name: msg
+    io.socket.post("/message", {
+        body: msg
     }, function(res) {
-        $("#chat-timeline").append('<li>' + res.name + '</li>');
+        $("#chat-timeline").append('<li>' + res.body + '</li>');
         $text.val('');
     });
 });
+// カード一覧取得
 var cardVm = new Vue({
     el: '.card-list',
     data: {
@@ -70,7 +73,7 @@ var cardCreateVm = new Vue({
                 $name.val('')
                 $power.val('')
                 if (res.success) {
-                    cardVm.$emit('card')
+                    //cardVm.$emit('card')
                 }
             });
         }

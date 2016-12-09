@@ -8,6 +8,11 @@
 module.exports = {
 
   attributes: {
+    body: {
+      type: 'string',
+      required: true
+    },
+  
     find: function(req, res) {
         console.log("GET /message");
 
