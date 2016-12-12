@@ -6,12 +6,17 @@
  */
 
 module.exports = {
+    /*
     _config: {
         actions: false,
         shortcuts: false,
         rest: false
-    },
+    },*/
 
-    
+    index: function (req, res) {
+
+        // ログインonly ダッシュボード
+        return res.view('lobby');
+     }
 };
 

@@ -6,10 +6,17 @@
  */
 
 module.exports = {
+    /*
     _config: {
         actions: false,
         shortcuts: false,
         rest: false
+    },*/
+
+    list: function (req, res) {
+
+        // ログインonly
+        return res.view('card/list');
     },
 
     create_index: function(req, res) {

@@ -49,15 +49,17 @@ module.exports.routes = {
   * for configuration options and examples.                                  *
   *                                                                          *
   ***************************************************************************/
+  'GET /login': {controller: "Auth", action: "login", view: "login"},
+  'POST /process': {controller: "Auth", action: "process"},
+  '/logout': {controller: "Auth", action: "logout"},
   'GET /test': {controller: "Test", action: "index"},
   'GET /test/test': {controller: "Test", action: "test"},
   'POST /test/test': {controller: "Test", action: "create"},
   'GET /card/find': {controller: "Card", action: "find"},
   'GET /card/create': {controller: "Card", action: "create_index"},
   'POST /card/create': {controller: "Card", action: "create"},
-  'GET /card/list': {view: "card/list"},
+  'GET /card/list': {controller: "Card", action: "list"},
   'GET /message': {controller: "Message", action: "find"},
   'POST /message': {controller: "Message", action: "create"},
-  '/lobby': {controller: "Lobby", view: "lobby"}
-  //'GET /card/create': {controller: "Card", action: "create"}
+  '/lobby': {controller: "Lobby"}
 };
