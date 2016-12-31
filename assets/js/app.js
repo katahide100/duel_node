@@ -5,9 +5,9 @@ io.socket.get("/message/findAll?limit=100", {}, function(data) {
     console.log(current_user_id);
     for (var i = 0; i < messages.length; i++) {
         if (current_user_id == messages[i].id) {
-            $("#chat-frame").append('<p class="chat-talk mytalk"><span class="talk-icon">' + messages[i].username + "</span><span class='talk-content'>" + messages[i].body + '</span></p>');
+            $("#chat-frame").prepend('<p class="chat-talk mytalk"><span class="talk-icon">' + messages[i].username + "</span><span class='talk-content'>" + messages[i].body + '</span></p>');
         } else {
-            $("#chat-frame").append('<p class="chat-talk"><span class="talk-icon">' + messages[i].username + "</span><span class='talk-content'>" + messages[i].body + '</span></p>');
+            $("#chat-frame").prepend('<p class="chat-talk"><span class="talk-icon">' + messages[i].username + "</span><span class='talk-content'>" + messages[i].body + '</span></p>');
         }
     }
 });
@@ -19,7 +19,7 @@ io.socket.get('/user/listen', {}, function() {});
 io.socket.on('message', function(message) {
     console.log(message);
     if (message.verb == "created") {
-        $("#chat-frame").append('<p class="chat-talk"><span class="talk-icon">' + message.data.username + "</span><span class='talk-content'>" + message.data.body + '</span></p>');
+        $("#chat-frame").prepend('<p class="chat-talk"><span class="talk-icon">' + message.data.username + "</span><span class='talk-content'>" + message.data.body + '</span></p>');
     }
 });
 
@@ -33,7 +33,7 @@ $('#chat-send-button').on('click', function() {
     io.socket.post("/message", {
         body: msg
     }, function(res) {
-        $("#chat-frame").append('<p class="chat-talk mytalk"><span class="talk-icon">' + res.username + "</span><span class='talk-content'>" + res.body +  '</span></p>');
+        $("#chat-frame").prepend('<p class="chat-talk mytalk"><span class="talk-icon">' + res.username + "</span><span class='talk-content'>" + res.body +  '</span></p>');
         $text.val('');
     });
 });
