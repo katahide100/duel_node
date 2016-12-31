@@ -17,6 +17,6 @@ module.exports = {
 
         // ログインonly ダッシュボード
         return res.view('lobby');
-     }
+    }
 };
 

@@ -52,6 +52,7 @@ module.exports.routes = {
   'GET /login': {controller: "Auth", action: "login", view: "login"},
   'POST /process': {controller: "Auth", action: "process"},
   '/logout': {controller: "Auth", action: "logout"},
+  'GET /user/listen': {controller: "User", action: "listen"},
   'GET /test': {controller: "Test", action: "index"},
   'GET /test/test': {controller: "Test", action: "test"},
   'POST /test/test': {controller: "Test", action: "create"},
@@ -60,6 +61,7 @@ module.exports.routes = {
   'POST /card/create': {controller: "Card", action: "create"},
   'GET /card/list': {controller: "Card", action: "list"},
   'GET /message': {controller: "Message", action: "find"},
+  'GET /message/findAll': {controller: "Message", action: "findAll"},
   'POST /message': {controller: "Message", action: "create"},
   '/lobby': {controller: "Lobby"}
 };

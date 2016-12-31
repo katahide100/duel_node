@@ -1,16 +1,29 @@
-var mySocket = io.sails.connect();
 // チャット取得
-io.socket.get("/message/find?limit=100", {}, function(messages) {
+io.socket.get("/message/findAll?limit=100", {}, function(data) {
+    var messages = data.data;
+    var current_user_id = data.current_user_id;
+    console.log(current_user_id);
     for (var i = 0; i < messages.length; i++) {
-    $("#chat-timeline").append('<li>' + messages[i].body + '</li>');
+        if (current_user_id == messages[i].id) {
+            $("#chat-frame").append('<p class="chat-talk mytalk"><span class="talk-icon">' + messages[i].username + "</span><span class='talk-content'>" + messages[i].body + '</span></p>');
+        } else {
+            $("#chat-frame").append('<p class="chat-talk"><span class="talk-icon">' + messages[i].username + "</span><span class='talk-content'>" + messages[i].body + '</span></p>');
+        }
     }
 });
+
+// チャットルームに入る
+io.socket.get('/user/listen', {}, function() {});
+
 // チャット受信
 io.socket.on('message', function(message) {
+    console.log(message);
     if (message.verb == "created") {
-        $("#chat-timeline").append('<li>' + message.data.body + '</li>');
+        $("#chat-frame").append('<p class="chat-talk"><span class="talk-icon">' + message.data.username + "</span><span class='talk-content'>" + message.data.body + '</span></p>');
     }
 });
+
+
 // チャット投稿
 $('#chat-send-button').on('click', function() {
     var $text = $('#chat-textarea');
@@ -20,7 +33,7 @@ $('#chat-send-button').on('click', function() {
     io.socket.post("/message", {
         body: msg
     }, function(res) {
-        $("#chat-timeline").append('<li>' + res.body + '</li>');
+        $("#chat-frame").append('<p class="chat-talk mytalk"><span class="talk-icon">' + res.username + "</span><span class='talk-content'>" + res.body +  '</span></p>');
         $text.val('');
     });
 });
@@ -42,8 +55,6 @@ var cardVm = new Vue({
 
         io.socket.on('card', function (msg) {
             cardVm.cardList = []
-            console.log('aaaa')
-            alert('tuuka')
             //console.log('Is it firing',msg);
             if (msg.verb == "created") {
             }

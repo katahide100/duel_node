@@ -7,98 +7,27 @@
 
 var passport = require('passport');
 module.exports = {
-	
-
-
-  /**
-   * `AuthController.login()`
-   */
-  login: function (req, res) {
-    // ログイン画面表示
-    return res.view();
+	login: function (req, res) {
+    res.view();
   },
-
-
-  /**
-   * `AuthController.process()`
-   */
-  /*
-  process: function (req, res) {
-
-    // ログイン承認処理
-    passport.authenticate('local', function(err, user, info) {
-      if ((err) || (!user)) {
-        return res.send({
-          message: 'login failed'
-        });
-      }
-
-      req.logIn(user, function(err) {
-        console.log('tuuka1');
-        if (err) res.send(err);
-        return res.redirect("/lobby");
-      });
-
-    })(req, res);
-
-  },*/
-
   process: function(req, res){
     passport.authenticate('local', function(err, user, info) {
       if ((err) || (!user)) {
         return res.send({
-          message: 'login failed'
+        message: 'ログインに失敗しました。'
         });
       }
       req.logIn(user, function(err) {
         if (err) res.send(err);
-        req.session.authenticated = true;
-        return res.send({
-          message: 'login successful'
-        });
+        return res.redirect("/");
       });
     })(req, res);
   },
-
-/*
-  process: function(req, res){  
-    passport.authenticate('local', function(err, user, info) {
-
-        console.log(info);
-
-        if ((err) || (!user)) {
-            return res.send({
-                message: 'login failed'
-            });
-        }
-
-        // req.isAuthenticated() -> false
-        // req.user -> undefined
-
-        req.logIn(user, function(err) {
-            if (err) res.send(err);
-
-            // req.isAuthenticated() -> true
-            // req.user -> user -> When new LocalStrategy, Callback user Object
-
-            return res.redirect("/lobby");
-
-        })(req, res);
-    });
-  },
-  */
-  /**
-   * `AuthController.logout()`
-   */
-  logout: function (req, res) {
-    ////
-    // ログイン承認解除
-    ////
-    req.session.authenticated = false;
-    //解除後、topページへ
+  logout: function (req,res){
     req.logout();
-    res.redirect('/');
+    res.send('ログアウトしました。');
   }
+
 };
 module.exports.blueprints = {
  

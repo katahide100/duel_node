@@ -6,6 +6,12 @@
  */
 
 module.exports = {
-	
+	listen: function (req, res) {
+        sails.sockets.join(req, 'lobby', function(err) {
+            if (err) {
+              return res.serverError(err);
+            }
+        });
+     }
 };
 
