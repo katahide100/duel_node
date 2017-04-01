@@ -14,9 +14,7 @@ module.exports = {
     },*/
 
     index: function (req, res) {
-
         // ログインonly ダッシュボード
-        return res.view('lobby');
     }
 };
 

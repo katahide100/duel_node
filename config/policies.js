@@ -27,6 +27,11 @@ module.exports.policies = {
   ***************************************************************************/
 
   '*': "sessionAuth",
+  UserController: {
+      'find': true,
+      'create': true,
+      'update': true
+  },
   AuthController: {
       // index : "loginAuth"
       '*': true

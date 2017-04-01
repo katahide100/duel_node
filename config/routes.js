@@ -50,6 +50,7 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
   'GET /login': {controller: "Auth", action: "login", view: "login"},
+  'POST /processChat': {controller: "Auth", action: "processChat"},
   'POST /process': {controller: "Auth", action: "process"},
   '/logout': {controller: "Auth", action: "logout"},
   'GET /user/listen': {controller: "User", action: "listen"},
@@ -63,5 +64,6 @@ module.exports.routes = {
   'GET /message': {controller: "Message", action: "find"},
   'GET /message/findAll': {controller: "Message", action: "findAll"},
   'POST /message': {controller: "Message", action: "create"},
-  '/lobby': {controller: "Lobby"}
+  '/lobby': {controller: "Lobby", view: "lobby"},
+  '/lobbyCgi': {controller: "Lobby", view: "lobby-cgi"}
 };

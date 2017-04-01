@@ -9,6 +9,10 @@ var bcrypt = require('bcrypt');
 module.exports = {
 
   attributes: {
+    user_id: {
+      type: 'string',
+      required: true
+    },
     username: {
       type: 'string',
       required: true,
@@ -26,6 +30,20 @@ module.exports = {
   },
 
   beforeCreate: function(user, cb) {
+    bcrypt.genSalt(10, function(err, salt) {
+      bcrypt.hash(user.password, salt, function(err, hash) {
+        if (err) {
+          console.log(err);
+          cb(err);
+        }else{
+          user.password = hash;
+          cb(null, user);
+        }
+      });
+    });
+  },
+
+  beforeUpdate: function(user, cb) {
     bcrypt.genSalt(10, function(err, salt) {
       bcrypt.hash(user.password, salt, function(err, hash) {
         if (err) {

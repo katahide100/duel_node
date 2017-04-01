@@ -27,7 +27,7 @@ module.exports = {
     },
     // 一覧表示用
     findAll: function(req, res) {
-        var query = 'SELECT * FROM message INNER JOIN user ON message.user_id = user.id';
+        var query = 'SELECT * FROM message INNER JOIN user ON message.user_id = user.id ORDER BY message.createdAt';
         var user_id = req.session.passport.user;
         Message.query(query,function(err,data){
             var resData = {data: data, current_user_id: user_id};
