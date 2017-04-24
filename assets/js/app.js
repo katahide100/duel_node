@@ -1,13 +1,25 @@
-// チャット取得
+// チャット取得(デザインは一旦cgi用に作成)
 io.socket.get("/message/findAll?limit=100", {}, function(data) {
     var messages = data.data;
     var current_user_id = data.current_user_id;
     console.log(current_user_id);
     for (var i = 0; i < messages.length; i++) {
+        var ip = messages[i].ip;
+        if ( ip == null ) {
+            ip = '';
+        }
+        var d = new Date(messages[i].createdAt);
+        var year  = d.getFullYear();
+        var month = d.getMonth() + 1;
+        var day   = d.getDate();
+        var hour  = ( d.getHours()   < 10 ) ? '0' + d.getHours()   : d.getHours();
+        var min   = ( d.getMinutes() < 10 ) ? '0' + d.getMinutes() : d.getMinutes();
+        var sec   = ( d.getSeconds() < 10 ) ? '0' + d.getSeconds() : d.getSeconds();
+        var createDate = year + '-' + month + '-' + day + ' ' + hour + ':' + min + ':' + sec;
         if (current_user_id == messages[i].id) {
-            $("#chat-frame").prepend('<p class="chat-talk mytalk"><span class="talk-icon">' + messages[i].username + "</span><span class='talk-content'>" + messages[i].body + '</span></p>');
+            $("#chat-frame").prepend('<p class="chat-talk mytalk"><span class="talk-user"><span class="talk-icon">' + messages[i].username + "</span></span><span class='talk-content'>" + messages[i].body + '&nbsp&nbsp&nbsp<label class="created-date">--' + createDate + '</label></span></p>');
         } else {
-            $("#chat-frame").prepend('<p class="chat-talk"><span class="talk-icon">' + messages[i].username + "</span><span class='talk-content'>" + messages[i].body + '</span></p>');
+            $("#chat-frame").prepend('<p class="chat-talk"><span class="talk-user"><span class="talk-icon">' + messages[i].username + "</span><span class='talk-ip'>" + ip + "</span></span><span class='talk-content'>" + messages[i].body + '&nbsp&nbsp&nbsp<label class="created-date">--' + createDate + '</label></span></p>');
         }
     }
 });
@@ -18,8 +30,20 @@ io.socket.get('/user/listen', {}, function() {});
 // チャット受信
 io.socket.on('message', function(message) {
     console.log(message);
+    var ip = message.data.ip;
+    if ( ip == null ) {
+        ip = '';
+    }
     if (message.verb == "created") {
-        $("#chat-frame").prepend('<p class="chat-talk"><span class="talk-icon">' + message.data.username + "</span><span class='talk-content'>" + message.data.body + '</span></p>');
+        var d = new Date(message.data.createdAt);
+        var year  = d.getFullYear();
+        var month = d.getMonth() + 1;
+        var day   = d.getDate();
+        var hour  = ( d.getHours()   < 10 ) ? '0' + d.getHours()   : d.getHours();
+        var min   = ( d.getMinutes() < 10 ) ? '0' + d.getMinutes() : d.getMinutes();
+        var sec   = ( d.getSeconds() < 10 ) ? '0' + d.getSeconds() : d.getSeconds();
+        var createDate = year + '-' + month + '-' + day + ' ' + hour + ':' + min + ':' + sec;
+        $("#chat-frame").prepend('<p class="chat-talk"><span class="talk-user"><span class="talk-icon">' + message.data.username + "</span><span class='talk-ip'>" + ip + "</span></span><span class='talk-content'>" + message.data.body + '&nbsp&nbsp&nbsp<label class="created-date">--' + createDate + '</label></span></p>');
     }
 });
 
@@ -27,14 +51,30 @@ io.socket.on('message', function(message) {
 // チャット投稿
 $('#chat-send-button').on('click', function() {
     var $text = $('#chat-textarea');
-
-    var msg = $text.val();
+    $.getJSON('//geoip.nekudo.com/api/<ip address>', function(data) {
+        var ip = data.ip;
     
-    io.socket.post("/message", {
-        body: msg
-    }, function(res) {
-        $("#chat-frame").prepend('<p class="chat-talk mytalk"><span class="talk-icon">' + res.username + "</span><span class='talk-content'>" + res.body +  '</span></p>');
-        $text.val('');
+        var msg = $text.val();
+        
+        io.socket.post("/message", {
+            ip: ip,
+            body: msg
+        }, function(res) {
+            var ip = res.ip;
+            if ( ip == null ) {
+                ip = '';
+            }
+            var d = new Date(res.createdAt);
+            var year  = d.getFullYear();
+            var month = d.getMonth() + 1;
+            var day   = d.getDate();
+            var hour  = ( d.getHours()   < 10 ) ? '0' + d.getHours()   : d.getHours();
+            var min   = ( d.getMinutes() < 10 ) ? '0' + d.getMinutes() : d.getMinutes();
+            var sec   = ( d.getSeconds() < 10 ) ? '0' + d.getSeconds() : d.getSeconds();
+            var createDate = year + '-' + month + '-' + day + ' ' + hour + ':' + min + ':' + sec;
+            $("#chat-frame").prepend('<p class="chat-talk mytalk"><span class="talk-user"><span class="talk-icon">' + res.username + "</span></span><span class='talk-content'>" + res.body + '&nbsp&nbsp&nbsp<label class="created-date">--' + createDate + '</label></span></p>');
+            $text.val('');
+        });
     });
 });
 // カード一覧取得
@@ -140,6 +180,8 @@ var newMessage = new Vue({
     }
   }
 });
+
+
 
 // Socket.IOに接続
 

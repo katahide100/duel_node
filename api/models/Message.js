@@ -8,6 +8,9 @@
 module.exports = {
 
   attributes: {
+    ip: {
+      type: 'string'
+    },
     body: {
       type: 'string',
       required: true

@@ -23,7 +23,8 @@
 }
 .chat-talk {
   overflow: hidden;
-  margin: 0 0 1em 0;
+  //margin: 0 0 1em 0;
+  margin: 0 0 5px 0;
   padding: 0;
 }
 .chat-talk span {
@@ -31,10 +32,24 @@
   margin: 0;
   padding: 0;
 }
-.chat-talk .talk-icon {
+.chat-talk .talk-user {
   float: left;
   width: auto;
 }
+.chat-talk .talk-icon {
+  float: none;
+  width: auto;
+}
+.chat-talk .talk-ip {
+  float: none;
+  width: auto;
+  font-size: 5px;
+}
+.chat-talk .created-date {
+  display: inline;
+  font-size: 5px;
+}
+/*
 .chat-talk .talk-content {
   position: relative;
   box-sizing: border-box;
@@ -45,6 +60,17 @@
   margin: 0 auto 0 70px;
   padding: 1em;
 }
+*/
+.chat-talk .talk-content {
+  position: relative;
+  box-sizing: border-box;
+  display: inline-block;
+  //min-height: 50px;
+  border-radius: 10px;
+  background-color: #FFF;
+  margin: 0 auto 0 50px;
+  padding: 7px;
+}
 .chat-talk .talk-icon img {
   max-width: 100%;
   height: auto;
@@ -54,8 +80,10 @@
 }
 .chat-talk .talk-content:before {
   position: absolute;
-  top: 15px;
-  left: -20px;
+  //top: 15px;
+  //left: -20px;
+  top: 10px;
+  left: -17px;
   display: block;
   width: 0;
   height: 0;
@@ -63,7 +91,7 @@
   border: 10px solid transparent;
   border-right-color: #FFF;
 }
-.chat-talk.mytalk .talk-icon {
+.chat-talk.mytalk .talk-user {
   float: right;
 }
 .chat-talk.mytalk .talk-content {
