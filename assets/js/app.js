@@ -3,7 +3,8 @@ io.socket.get("/message/findAll?limit=50", {}, function(data) {
     var messages = data.data;
     var current_user_id = data.current_user_id;
     console.log(current_user_id);
-    for (var i = 0; i < messages.length; i++) {
+    console.log(messages.length);
+    for (var i = messages.length - 1; i > 0; i--) {
         var ip = messages[i].ip;
         if ( ip == null ) {
             ip = '';

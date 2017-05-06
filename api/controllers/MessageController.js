@@ -34,7 +34,7 @@ module.exports = {
     },
     // 一覧表示用
     findAll: function(req, res) {
-        var query = 'SELECT *, message.createdAt as createdAt FROM message INNER JOIN user ON message.user_id = user.id ORDER BY message.createdAt';
+        var query = 'SELECT *, message.createdAt as createdAt FROM message INNER JOIN user ON message.user_id = user.id ORDER BY message.createdAt DESC';
         if (req.query.limit != undefined && req.query.limit != '') {
             query = query + ' LIMIT ' + req.query.limit;
         }
