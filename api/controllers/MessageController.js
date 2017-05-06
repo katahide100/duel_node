@@ -35,6 +35,10 @@ module.exports = {
     // 一覧表示用
     findAll: function(req, res) {
         var query = 'SELECT *, message.createdAt as createdAt FROM message INNER JOIN user ON message.user_id = user.id ORDER BY message.createdAt';
+        if (req.query.limit != undefined && req.query.limit != '') {
+            query = query + ' LIMIT ' + req.query.limit;
+        }
+        
         var user_id = req.session.passport.user;
         Message.query(query,function(err,data){
             var resData = {data: data, current_user_id: user_id};

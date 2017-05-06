@@ -1,5 +1,5 @@
 // チャット取得(デザインは一旦cgi用に作成)
-io.socket.get("/message/findAll?limit=100", {}, function(data) {
+io.socket.get("/message/findAll?limit=50", {}, function(data) {
     var messages = data.data;
     var current_user_id = data.current_user_id;
     console.log(current_user_id);
@@ -89,7 +89,7 @@ var cardVm = new Vue({
         var self = this
         
         // サーバに GET /card/find としてリクエストする
-        io.socket.get('/card/find?limit=100', function (res) {
+        io.socket.get('/card/find?limit=50', function (res) {
             self.cardList = res
         })
 
