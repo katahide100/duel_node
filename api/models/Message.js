@@ -18,6 +18,10 @@ module.exports = {
     user_id: {
       type: 'string',
       required: true
+    },
+    channel: {
+      type: 'string',
+      required: true
     }
   }
 };

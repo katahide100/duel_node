@@ -18,9 +18,9 @@ io.socket.get("/message/findAll?limit=50", {}, function(data) {
         var sec   = ( d.getSeconds() < 10 ) ? '0' + d.getSeconds() : d.getSeconds();
         var createDate = year + '-' + month + '-' + day + ' ' + hour + ':' + min + ':' + sec;
         if (current_user_id == messages[i].id) {
-            $("#chat-frame").prepend('<p class="chat-talk mytalk"><span class="talk-user"><span class="talk-icon">' + messages[i].username + "</span></span><span class='talk-content'>" + messages[i].body + '&nbsp&nbsp&nbsp<label class="created-date">--' + createDate + '</label></span></p>');
+            $("#chat-frame" + messages[i].channel).prepend('<p class="chat-talk mytalk"><span class="talk-user"><span class="talk-icon">' + messages[i].username + "</span></span><span class='talk-content'>" + messages[i].body + '&nbsp&nbsp&nbsp<label class="created-date">--' + createDate + '</label></span></p>');
         } else {
-            $("#chat-frame").prepend('<p class="chat-talk"><span class="talk-user"><span class="talk-icon">' + messages[i].username + "</span><span class='talk-ip'>" + ip + "</span></span><span class='talk-content'>" + messages[i].body + '&nbsp&nbsp&nbsp<label class="created-date">--' + createDate + '</label></span></p>');
+            $("#chat-frame" + messages[i].channel).prepend('<p class="chat-talk"><span class="talk-user"><span class="talk-icon">' + messages[i].username + "</span><span class='talk-ip'>" + ip + "</span></span><span class='talk-content'>" + messages[i].body + '&nbsp&nbsp&nbsp<label class="created-date">--' + createDate + '</label></span></p>');
         }
     }
 });
@@ -44,14 +44,23 @@ io.socket.on('message', function(message) {
         var min   = ( d.getMinutes() < 10 ) ? '0' + d.getMinutes() : d.getMinutes();
         var sec   = ( d.getSeconds() < 10 ) ? '0' + d.getSeconds() : d.getSeconds();
         var createDate = year + '-' + month + '-' + day + ' ' + hour + ':' + min + ':' + sec;
-        $("#chat-frame").prepend('<p class="chat-talk"><span class="talk-user"><span class="talk-icon">' + message.data.username + "</span><span class='talk-ip'>" + ip + "</span></span><span class='talk-content'>" + message.data.body + '&nbsp&nbsp&nbsp<label class="created-date">--' + createDate + '</label></span></p>');
+        $("#chat-frame" + message.data.channel).prepend('<p class="chat-talk"><span class="talk-user"><span class="talk-icon">' + message.data.username + "</span><span class='talk-ip'>" + ip + "</span></span><span class='talk-content'>" + message.data.body + '&nbsp&nbsp&nbsp<label class="created-date">--' + createDate + '</label></span></p>');
     }
 });
 
+$(".chat-frame").hide();
+$("#chat-frame1").show();
+$('input[name=channel]').change( function(){
+    var channel = $("input[name='channel']:checked").val();
+    $(".chat-frame").hide();
+    $("#chat-frame" + channel).show();
+});
 
 // チャット投稿
 $('#chat-send-button').on('click', function() {
     var $text = $('#chat-textarea');
+    var $channel = $("input[name='channel']:checked").val();
+    console.log($channel);
     $.getJSON('//geoip.nekudo.com/api/<ip address>', function(data) {
         var ip = data.ip;
     
@@ -59,7 +68,8 @@ $('#chat-send-button').on('click', function() {
         
         io.socket.post("/message", {
             ip: ip,
-            body: msg
+            body: msg,
+            channel: $channel
         }, function(res) {
             var ip = res.ip;
             if ( ip == null ) {
@@ -73,7 +83,7 @@ $('#chat-send-button').on('click', function() {
             var min   = ( d.getMinutes() < 10 ) ? '0' + d.getMinutes() : d.getMinutes();
             var sec   = ( d.getSeconds() < 10 ) ? '0' + d.getSeconds() : d.getSeconds();
             var createDate = year + '-' + month + '-' + day + ' ' + hour + ':' + min + ':' + sec;
-            $("#chat-frame").prepend('<p class="chat-talk mytalk"><span class="talk-user"><span class="talk-icon">' + res.username + "</span></span><span class='talk-content'>" + res.body + '&nbsp&nbsp&nbsp<label class="created-date">--' + createDate + '</label></span></p>');
+            $("#chat-frame" + res.channel).prepend('<p class="chat-talk mytalk"><span class="talk-user"><span class="talk-icon">' + res.username + "</span></span><span class='talk-content'>" + res.body + '&nbsp&nbsp&nbsp<label class="created-date">--' + createDate + '</label></span></p>');
             $text.val('');
         });
     });
