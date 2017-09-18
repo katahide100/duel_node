@@ -52,8 +52,18 @@ $(".chat-frame").hide();
 $("#chat-frame1").show();
 $('input[name=channel]').change( function(){
     var channel = $("input[name='channel']:checked").val();
-    $(".chat-frame").hide();
-    $("#chat-frame" + channel).show();
+    $(".chat-frame").hide('slow');
+    $("#chat-frame" + channel).show('slow');
+});
+
+$(".channels").hide();
+$('#chat-channel-button').on('click', function(){
+    console.log('test');
+    if ($('.channels').css('display') == 'block') {
+        $(".channels").hide('slow');
+    } else {
+        $(".channels").show('slow');
+    }
 });
 
 // チャット投稿

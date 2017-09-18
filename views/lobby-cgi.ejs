@@ -1,7 +1,48 @@
+<div class="cgi-body">
 <div id="chat-main">
-  <div id="chat-form-frame-cgi" style="">
-    <input type="text" id="chat-textarea" style="width: 80%" class="form-control">
-    <button type="button" id="chat-send-button" class="btn btn-primary">投稿</button>
+  <div id="chat-form-frame-cgi" style="" class="form-group">
+    
+    
+    <input type="text" id="chat-textarea" style="width: 80%" class="form-control inline">
+    <button type="button" id="chat-send-button" class="btn btn-primary inline">投稿</button>
+    <button type="button" id="chat-channel-button" class="btn btn-primary inline">ch</button>
+
+    <div class='container channels'>
+        <div id='mode' class="btn-group" data-toggle="buttons">
+            <label class="btn btn-primary active">
+                <input type="radio" name="channel" autocomplete="off" value="1" checked>1ch
+            </label>
+            <label class="btn btn-primary">
+                <input type="radio" name="channel" autocomplete="off" value="2">2ch
+            </label>
+            <label class="btn btn-primary">
+                <input type="radio" name="channel" autocomplete="off" value="3">3ch
+            </label>
+            <label class="btn btn-primary">
+                <input type="radio" name="channel" autocomplete="off" value="4">4ch
+            </label>
+            <label class="btn btn-primary">
+                <input type="radio" name="channel" autocomplete="off" value="5">5ch
+            </label>
+            <label class="btn btn-primary">
+                <input type="radio" name="channel" autocomplete="off" value="6">6ch
+            </label>
+            <label class="btn btn-primary">
+                <input type="radio" name="channel" autocomplete="off" value="7">7ch
+            </label>
+            <label class="btn btn-primary">
+                <input type="radio" name="channel" autocomplete="off" value="8">8ch
+            </label>
+        </div>
+    </div>
   </div>
-  <div id="chat-frame"></div>
+  <div id="chat-frame1" class="chat-frame"></div>
+  <div id="chat-frame2" class="chat-frame"></div>
+  <div id="chat-frame3" class="chat-frame"></div>
+  <div id="chat-frame4" class="chat-frame"></div>
+  <div id="chat-frame5" class="chat-frame"></div>
+  <div id="chat-frame6" class="chat-frame"></div>
+  <div id="chat-frame7" class="chat-frame"></div>
+  <div id="chat-frame8" class="chat-frame"></div>
+</div>
 </div>
