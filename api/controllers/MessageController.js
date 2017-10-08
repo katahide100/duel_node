@@ -36,6 +36,11 @@ module.exports = {
         }
         
         var user_id = req.session.passport.user;
+        //console.log(process.memoryUsage());
+        if(global.gc) {
+            global.gc();
+        }
+        //console.log(process.memoryUsage());
         Message.query(query,function(err,data){
             var resData = {data: data, current_user_id: user_id};
             return res.json(resData);
