@@ -30,10 +30,13 @@ module.exports = {
     },
     // 一覧表示用
     findAll: function(req, res) {
-        var query = 'SELECT *, message.createdAt as createdAt FROM message INNER JOIN user ON message.user_id = user.id ORDER BY message.createdAt DESC';
+        
+        var limit = 50;
         if (req.query.limit != undefined && req.query.limit != '') {
-            query = query + ' LIMIT ' + req.query.limit;
+            limit = req.query.limit;
         }
+
+        var query = 'SELECT *, msg.createdAt as createdAt FROM message msg INNER JOIN user ON  msg.user_id = user.id WHERE ( SELECT COUNT(*) FROM message msg2 WHERE msg2.channel = msg.channel AND msg2.createdAt > msg.createdAt ) < ' + limit + ' ORDER BY msg.channel DESC, msg.createdAt DESC';
         
         var user_id = req.session.passport.user;
         //console.log(process.memoryUsage());
