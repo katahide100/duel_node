@@ -61,6 +61,9 @@ module.exports = {
         if (req.query.date != undefined && req.query.date != '') {
             var date = req.query.date;
             var arrDate = date.split(' - ');
+            if (arrDate[1] === undefined || arrDate[1] == '') {
+                arrDate[1] = arrDate[0];
+            }
             dateWhere = ' msg.createdAt > "' + arrDate[0] + ' 00:00:00" AND msg.createdAt < "' + arrDate[1] + ' 23:59:59" ';
         }
 
