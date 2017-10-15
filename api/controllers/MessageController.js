@@ -50,20 +50,21 @@ module.exports = {
     // ログ検索
     findLog: function(req, res) {
         
-        var limit = 1000;
-        if (req.query.limit != undefined && req.query.limit != '') {
+        var limit = 3000;
+        // 一旦固定
+        /*if (req.query.limit != undefined && req.query.limit != '') {
             limit = req.query.limit;
-        }
+        }*/
 
         // 検索範囲日時
         var dateWhere = '';
         if (req.query.date != undefined && req.query.date != '') {
             var date = req.query.date;
             var arrDate = date.split(' - ');
-            dateWhere = ' AND msg.createdAt > "' + arrDate[0] + ' 00:00:00" AND msg.createdAt < "' + arrDate[1] + ' 23:59:59" ';
+            dateWhere = ' msg.createdAt > "' + arrDate[0] + ' 00:00:00" AND msg.createdAt < "' + arrDate[1] + ' 23:59:59" ';
         }
 
-        var query = 'SELECT *, msg.createdAt as createdAt FROM message msg INNER JOIN user ON  msg.user_id = user.id WHERE ( SELECT COUNT(*) FROM message msg2 WHERE msg2.channel = msg.channel AND msg2.createdAt > msg.createdAt ) < ' + limit + dateWhere + ' ORDER BY msg.channel DESC, msg.createdAt DESC';
+        var query = 'SELECT *, msg.createdAt as createdAt FROM message msg INNER JOIN user ON  msg.user_id = user.id WHERE ' + dateWhere + ' ORDER BY msg.channel DESC, msg.createdAt DESC LIMIT ' + limit;
         var user_id = req.session.passport.user;
         if(global.gc) {
             global.gc(); // メモリ解放
