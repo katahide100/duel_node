@@ -14,7 +14,7 @@ function findById(id, fn) {
 
 function findByUsername(u, fn) {
   User.findOne({
-    username: u
+    user_id: u
   }).exec(function (err, user) {
     // Error handling
     if (err) {

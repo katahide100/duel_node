@@ -20,7 +20,7 @@ module.exports = {
       }
       req.logIn(user, function (err) {
         if (err) res.send(err);
-        return res.redirect("/lobbyCgi");
+        return res.redirect(req.body["url"]);
       });
     })(req, res);
   },
@@ -31,6 +31,7 @@ module.exports = {
           message: 'ログインに失敗しました。'
         });
       }
+      
       req.logIn(user, function (err) {
         if (err) res.send(err);
         return res.redirect("/");
