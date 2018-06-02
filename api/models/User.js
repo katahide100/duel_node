@@ -22,6 +22,12 @@ module.exports = {
       type: 'string',
       required: true
     },
+    auth: {
+      type: 'integer'
+    },
+    orica: {
+      type: 'integer'
+    },
     toJSON: function() {
       var obj = this.toObject();
       delete obj.password;
@@ -44,17 +50,21 @@ module.exports = {
   },
 
   beforeUpdate: function(user, cb) {
-    bcrypt.genSalt(10, function(err, salt) {
-      bcrypt.hash(user.password, salt, function(err, hash) {
-        if (err) {
-          console.log(err);
-          cb(err);
-        }else{
-          user.password = hash;
-          cb(null, user);
-        }
+    if (user.password !== undefined && user.password != '') {
+      bcrypt.genSalt(10, function(err, salt) {
+        bcrypt.hash(user.password, salt, function(err, hash) {
+          if (err) {
+            console.log(err);
+            cb(err);
+          }else{
+            user.password = hash;
+            cb(null, user);
+          }
+        });
       });
-    });
+    } else {
+      cb(null, user);
+    }
   }
 };
 
