@@ -36,7 +36,15 @@ module.exports = {
             limit = req.query.limit;
         }
 
-        var query = 'SELECT *, msg.createdAt as createdAt FROM message msg INNER JOIN user ON  msg.user_id = user.id WHERE ( SELECT COUNT(*) FROM message msg2 WHERE msg2.channel = msg.channel AND msg2.createdAt > msg.createdAt ) < ' + limit + ' ORDER BY msg.channel DESC, msg.createdAt DESC';
+        var query = '';
+        for (var i=1;i <= 8;i++) {
+            query = query + '(select *, msg.createdAt as createdAt from message msg INNER JOIN user ON  msg.user_id = user.id where channel=' + i + ' order by msg.createdAt desc limit ' + limit + ')';
+            if (i != 8) {
+                query = query + ' UNION ';
+            }
+        }
+
+        //var query = 'SELECT *, msg.createdAt as createdAt FROM message msg INNER JOIN user ON  msg.user_id = user.id WHERE ( SELECT COUNT(*) FROM message msg2 WHERE msg2.channel = msg.channel AND msg2.createdAt > msg.createdAt ) < ' + limit + ' ORDER BY msg.channel DESC, msg.createdAt DESC';
         
         var user_id = req.session.passport.user;
         if(global.gc) {
