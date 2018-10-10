@@ -70,7 +70,7 @@ $('#chat-send-button').on('click', function() {
     var $text = $('#chat-textarea');
     var $channel = $("input[name='channel']:checked").val();
     console.log($channel);
-    $.getJSON('//geoip.nekudo.com/api/<ip address>', function(data) {
+    $.getJSON('//api.ipapi.com/<ip address>?access_key=54e37314186c454b8da7e3d569673972', function(data) {
         var ip = data.ip;
     
         var msg = $text.val();
