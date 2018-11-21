@@ -5,7 +5,7 @@
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
  */
 
-var bcrypt = require('bcrypt');
+var bcrypt = require('bcryptjs');
 module.exports = {
 
   attributes: {
@@ -65,6 +65,27 @@ module.exports = {
     } else {
       cb(null, user);
     }
-  }
+  },
+
+  /**
+   * idでユーザー検索
+   * 
+   * @param {String|Integer} id 検索したいユーザーのid(ユーザーIDではない)
+   * @return {Object} ユーザー情報
+   */
+  findOneByIdSync: async function (id) {
+    if (!id){
+        return false;
+    } else {
+        // ユーザー情報取得
+        var user = await User.findOne({ id: id });
+
+        if (!user) {
+          return false;
+        }
+
+        return user;
+    }
+}
 };
 

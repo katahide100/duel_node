@@ -1,3 +1,12 @@
+<% script("/js/page/lobby_cgi/app.js") -%>
+
+<div class="user-list-body">
+    <div class="user-list">
+        <div class="active-user label label-info" style="background-color: #00D0FF;" v-for="user in userList">
+            <font color="blue">{{user}}</font>
+        </div>
+    </div>
+</div>
 <div class="cgi-body">
 <div id="chat-main">
   <div id="chat-form-frame-cgi" style="" class="form-group">

@@ -54,6 +54,7 @@ module.exports.routes = {
   'POST /process': {controller: "Auth", action: "process"},
   '/logout': {controller: "Auth", action: "logout"},
   'GET /user/listen': {controller: "User", action: "listen"},
+  'GET /user/getLoginUser': {controller: "User", action: "getLoginUser"},
   'GET /test': {controller: "Test", action: "index"},
   'GET /test/test': {controller: "Test", action: "test"},
   'POST /test/test': {controller: "Test", action: "create"},
@@ -67,5 +68,8 @@ module.exports.routes = {
   'POST /message': {controller: "Message", action: "create"},
   '/lobby': {controller: "Lobby", view: "lobby"},
   '/lobbyCgi': {controller: "Lobby", view: "lobby-cgi"},
-  '/chatLogCgi': {controller: "Lobby", view: "chat-log-cgi"}
+  '/chatLogCgi': {controller: "Lobby", view: "chat-log-cgi"},
+  'POST /userList': {controller: "UserList", action: "activeCheck"},
+  'DELETE /userList': {controller: "UserList", action: "leave"},
+  'GET /userList/checkAndDelete': {controller: "UserList", action: "checkAndDelete"},
 };

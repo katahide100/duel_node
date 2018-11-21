@@ -12,7 +12,7 @@ module.exports = {
 /*
 var passport = require('passport'),  
 LocalStrategy = require('passport-local').Strategy,  
-bcrypt = require('bcrypt');
+bcrypt = require('bcryptjs');
 
 
 //helper functions

@@ -36,6 +36,10 @@ module.exports.policies = {
       // index : "loginAuth"
       '*': true
   },
+  UserListController: {
+    'activeCheck': true, // CGIからのアクセスがあるため（本当はしたくない）
+    'checkAndDelete': true
+},
 
   /***************************************************************************
   *                                                                          *
