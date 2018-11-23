@@ -1,11 +1,17 @@
 // ログイン情報取得
-var response = $.ajax({
+var responseJson;
+$.ajax({
     type: 'GET',
     url: '/user/getLoginUser',
     dataType: 'json',
-    async: false
-}).responseText;
-var responseJson = JSON.parse(response);
+    async: false,
+    success: function(response) {
+        responseJson = response;
+    },
+    error: function() {
+        console.log('ログイン情報取得失敗');
+    }
+});
 var userInfo = responseJson.user;
 
 // チャット取得(デザインは一旦cgi用に作成)
