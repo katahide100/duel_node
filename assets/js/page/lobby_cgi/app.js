@@ -83,7 +83,7 @@ $('#chat-send-button').on('click', function() {
     var $text = $('#chat-textarea');
     var $channel = $("input[name='channel']:checked").val();
     console.log($channel);
-    $.getJSON('//api.ipapi.com/<ip address>?access_key=54e37314186c454b8da7e3d569673972', function(data) {
+    $.getJSON('//api.ipstack.com/check?access_key=54e37314186c454b8da7e3d569673972', function(data) {
         var ip = data.ip;
     
         var msg = $text.val();
