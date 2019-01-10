@@ -35,4 +35,11 @@ module.exports = {
   //   level: "silent"
   // }
 
+  ssl: {
+    key: require("fs").readFileSync("/etc/letsencrypt/live/manadream.net/privkey.pem"),
+    cert: require("fs").readFileSync("/etc/letsencrypt/live/manadream.net/cert.pem")
+  },
+
+  port: 1337,
+
 };
