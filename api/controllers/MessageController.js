@@ -7,7 +7,10 @@
 
 module.exports = {
 	create: function(req, res) {
-        var ip = req.param('ip');
+        var ip = '0.0.0.0';
+        if (req.socket && req.socket.handshake.address) {
+          ip = req.socket.handshake.address;
+        }
         var body = req.param('body');
         var channel = req.param('channel');
 
