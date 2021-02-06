@@ -29,6 +29,9 @@ mysql_secure_installation
 ### 設定変更
 vi config/connections.js
 
+### 不要なファイル削除
+rm -rf data/active_users/.gitkeep
+
 DBのユーザーとパスワードを設定
 
 ### node.jsインストール
