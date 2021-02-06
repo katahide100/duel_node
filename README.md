@@ -51,7 +51,7 @@ node app.js --prod
 forever start -c "n use 8.11.4 --expose-gc" app.js --prod
 
 ### 起動できたがブラウザから表示できない場合
-####ポート開放
+#### ポート開放
 firewall-cmd --add-port=1337/tcp --zone=public --permanent
 
 firewall-cmd --reload
