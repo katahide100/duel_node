@@ -1,3 +1,8 @@
-# cgi3
+# duel_node
 
-a [Sails](http://sailsjs.org) application
+### mysqlインストール
+dnf install @mysql:8.0
+
+systemctl enable mysqld
+
+systemctl start mysqld
