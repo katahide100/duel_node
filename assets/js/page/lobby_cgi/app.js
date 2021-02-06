@@ -177,3 +177,33 @@ window.onblur = function () {
 //     });
 // } , 5000);
 
+let typing = false;
+io.socket.on("typing", function(typinguser){
+    if (typinguser.verb == "start") {
+	    $('#typing-user').text(typinguser.data + 'が入力中です');
+    }
+    
+    setTimeout(function(){
+        $('#typing-user').text("");
+    }, 3000);
+});
+io.socket.on("typing", function(typinguser){
+	if (typinguser.verb == "stop") {
+	    $('#typing-user').text("");
+    }
+});
+
+// 入力開始と同時にタイピンスタートを伝える
+$("#chat-textarea").keyup(function(){
+    if (!typing) {
+        typing = true;
+        var $channel = $("input[name='channel']:checked").val();
+        io.socket.post("/message/typingStart", {
+            channel: $channel
+        });
+        
+        setTimeout(function(){
+            typing = false;
+        }, 3000);
+    }
+});

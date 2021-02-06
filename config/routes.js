@@ -66,6 +66,7 @@ module.exports.routes = {
   'GET /message/findAll': {controller: "Message", action: "findAll"},
   'GET /message/findLog': {controller: "Message", action: "findLog"},
   'POST /message': {controller: "Message", action: "create"},
+  'POST /message/typingStart': {controller: "Message", action: "typingStart"},
   '/lobby': {controller: "Lobby", view: "lobby"},
   '/lobbyCgi': {controller: "Lobby", view: "lobby-cgi"},
   '/chatLogCgi': {controller: "Lobby", view: "chat-log-cgi"},

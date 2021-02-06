@@ -1,0 +1,8 @@
+var webclient = require("request");
+ 
+webclient.get({
+ url: "https://manadream.net:1337/userList/checkAndDelete",
+// url: "https://yahoo.com",
+}, function (error, response, body) {
+  console.log(body);
+});

@@ -26,6 +26,7 @@ module.exports = {
                 Message.query(query,function(err,data){
                     // 自分以外の人にメッセージ送信
                     sails.sockets.broadcast('lobby','message',{verb: 'created', data: data[0]}, req);
+                    sails.sockets.broadcast('lobby','typing',{verb: 'stop', data: user_id}, req);
                     return res.json(data[0]);
                 });
             });
@@ -87,6 +88,19 @@ module.exports = {
             var resData = {data: data, current_user_id: user_id};
             return res.json(resData);
         });
+    },
+    typingStart: async function(req, res) {
+        var channel = req.param('channel');
+
+        // セッションからユーザーIDを取得
+        var user = await UserService.getLoginUser(req);
+        if (!user) {
+            return res.serverError({code: consts.res_code.SYSTEM_ERR, message: 'ユーザー情報が取得できませんでした。'});
+        }
+        var userName = user.username; // ユーザー名
+        // 自分以外の人に送信
+        sails.sockets.broadcast('lobby','typing',{verb: 'start', data: userName}, req);
+        return res.json(user_id);
     }
 };
 
