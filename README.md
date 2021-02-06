@@ -33,3 +33,19 @@ DBのユーザーとパスワードを設定
 
 ### node.jsインストール
 yum install nodejs npm
+
+npm install -g n
+
+npm install -g forever
+
+n v8.11.4
+
+npm install
+
+npm install bcryptjs
+
+#### 動作確認
+node app.js --prod
+
+#### 永続動作
+forever start -c "n use 8.11.4 --expose-gc" app.js --prod
