@@ -60,3 +60,17 @@ firewall-cmd --add-port=1337/tcp --zone=public --permanent
 firewall-cmd --reload
 
 firewall-cmd --list-all --zone=public
+
+### crontab設定
+crontab -e
+
+```
+PATH="/root/.pyenv/shims:/root/.pyenv/bin:/root/.nvm/versions/node/v0.12.7/bin:/root/.pyenv/shims:/root/.pyenv/bin:/root/.pyenv/shims:/root/.pyenv/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin:/usr/local/go/bin:/root/bin:/usr/local/go/bin:/root/bin:/usr/local/go/bin"
+
+* * * * * /var/www/duel_node/script/active_check.sh
+* * * * * sleep 10; /var/www/duel_node/script/active_check.sh
+* * * * * sleep 20; /var/www/duel_node/script/active_check.sh
+* * * * * sleep 30; /var/www/duel_node/script/active_check.sh
+* * * * * sleep 40; /var/www/duel_node/script/active_check.sh
+* * * * * sleep 50; /var/www/duel_node/script/active_check.sh
+```
