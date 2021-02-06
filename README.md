@@ -30,3 +30,6 @@ mysql_secure_installation
 vi config/connections.js
 
 DBのユーザーとパスワードを設定
+
+### node.jsインストール
+yum install nodejs npm
