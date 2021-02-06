@@ -25,3 +25,8 @@ systemctl restart mysqld.service
 mysql_secure_installation
 
 基本はyesでパスワードは任意
+
+### 設定変更
+vi config/connections.js
+
+DBのユーザーとパスワードを設定
