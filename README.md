@@ -41,9 +41,9 @@ rm -rf data/active_users/.gitkeep
 ### node.jsインストール
 yum install nodejs npm
 
-npm install -g n
+npm install -g n@2.1.12
 
-npm install -g forever
+npm install -g forever@0.15.3
 
 n v8.11.4
 
