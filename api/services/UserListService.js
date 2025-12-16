@@ -13,8 +13,8 @@ module.exports = {
      * @param {String} name ユーザー名
      * @return {String} 生成したファイルパス
      */
-	getFilePath: function(id, name) {
-        
+    getFilePath: function (id, name) {
+
         const userListConsts = sails.config.const.user_list;
 
         // ユーザー名は符号化する
@@ -33,7 +33,7 @@ module.exports = {
      * @param  {String}  path 検索したいファイルのパス
      * @return {Boolean} 結果 true:存在する false:存在しない -1:エラー
      */
-	checkExists: function(path) {
+    checkExists: function (path) {
 
         const fs = require('fs');
 
@@ -57,20 +57,20 @@ module.exports = {
      * @param {String} path 作成、更新したいファイルのパス
      * @return {Boolean} 結果 true:成功
      */
-	create: function(path) {
+    create: function (path) {
 
         // ファイルに書きこむ日付取得(秒単位)
-        const date = new Date() ;
-        var dateTime = date.getTime() ;
-        dateTime = Math.floor( dateTime / 1000 );
+        const date = new Date();
+        var dateTime = date.getTime();
+        dateTime = Math.floor(dateTime / 1000);
         const body = dateTime;
 
         const fs = require('fs');
 
         try {
             // ファイルに書き込み
-            fs.writeFileSync(path, body);
-          } catch(err) {
+            fs.writeFileSync(path, body.toString());
+        } catch (err) {
             return false;
         }
 
@@ -85,14 +85,14 @@ module.exports = {
      * @param {String} path 削除したいファイルのパス
      * @return {Boolean} 結果 true:成功
      */
-	delete: function(path) {
+    delete: function (path) {
 
         const fs = require('fs');
 
         try {
             // ファイルに書き込み
             fs.unlinkSync(path);
-          } catch(err) {
+        } catch (err) {
             return false;
         }
 
@@ -106,17 +106,17 @@ module.exports = {
      * 
      * @return {Object|Integer} 参加ユーザー一覧　{XXX11111: "test", XXX22222: "test2"} -1:エラー
      */
-	getAll: function() {
+    getAll: function () {
 
         const userListConsts = sails.config.const.user_list;
         const dir = userListConsts.active_user_dir;
         const fs = require('fs');
         var userList = {};
-        
+
         try {
             // 自分のファイルを作成した後のため、必ず1ファイルはある前提
             var fileList = fs.readdirSync(dir);
-            fileList.forEach(function(file) {
+            fileList.forEach(function (file) {
                 // 拡張子と分ける
                 var arrFile = file.split(/\.(?=[^.]+$)/);
                 // ユーザーIDとユーザー名を取得
@@ -126,7 +126,7 @@ module.exports = {
             });
 
             return userList;
-        } catch(err) {
+        } catch (err) {
             return -1;
         }
     },
@@ -138,23 +138,23 @@ module.exports = {
      * 
      * @return {Object|Integer} 削除ユーザー一覧　{XXX11111: "test", XXX22222: "test2"} -1:エラー
      */
-	checkAndDelete: function() {
+    checkAndDelete: function () {
 
         // 比較対象の時間を取得
-        const date = new Date() ;
-        var dateTime = date.getTime() ;
-        dateTime = Math.floor( dateTime / 1000 );
+        const date = new Date();
+        var dateTime = date.getTime();
+        dateTime = Math.floor(dateTime / 1000);
 
         const userListConsts = sails.config.const.user_list;
         const dir = userListConsts.active_user_dir;
         const fs = require('fs');
         // 削除したユーザー一覧格納用
         var deleteUserList = {};
-        
+
         try {
             // ファイル読み込み
             var fileList = fs.readdirSync(dir);
-            fileList.forEach(function(file) {
+            fileList.forEach(function (file) {
                 var fileTime = fs.readFileSync(dir + file);
 
                 // 一定時間経ったものを削除する
@@ -172,7 +172,7 @@ module.exports = {
             });
 
             return deleteUserList;
-        } catch(err) {
+        } catch (err) {
             return -1;
         }
     },

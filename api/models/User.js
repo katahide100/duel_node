@@ -13,6 +13,9 @@ module.exports = {
       type: 'string',
       required: true
     },
+    token: {
+      type: 'string'
+    },
     username: {
       type: 'string',
       required: true,
@@ -28,20 +31,23 @@ module.exports = {
     orica: {
       type: 'integer'
     },
-    toJSON: function() {
+    kunsyo: {
+      type: 'string'
+    },
+    toJSON: function () {
       var obj = this.toObject();
       delete obj.password;
       return obj;
     }
   },
 
-  beforeCreate: function(user, cb) {
-    bcrypt.genSalt(10, function(err, salt) {
-      bcrypt.hash(user.password, salt, function(err, hash) {
+  beforeCreate: function (user, cb) {
+    bcrypt.genSalt(10, function (err, salt) {
+      bcrypt.hash(user.password, salt, function (err, hash) {
         if (err) {
           console.log(err);
           cb(err);
-        }else{
+        } else {
           user.password = hash;
           cb(null, user);
         }
@@ -49,14 +55,14 @@ module.exports = {
     });
   },
 
-  beforeUpdate: function(user, cb) {
+  beforeUpdate: function (user, cb) {
     if (user.password !== undefined && user.password != '') {
-      bcrypt.genSalt(10, function(err, salt) {
-        bcrypt.hash(user.password, salt, function(err, hash) {
+      bcrypt.genSalt(10, function (err, salt) {
+        bcrypt.hash(user.password, salt, function (err, hash) {
           if (err) {
             console.log(err);
             cb(err);
-          }else{
+          } else {
             user.password = hash;
             cb(null, user);
           }
@@ -74,18 +80,18 @@ module.exports = {
    * @return {Object} ユーザー情報
    */
   findOneByIdSync: async function (id) {
-    if (!id){
-        return false;
+    if (!id) {
+      return false;
     } else {
-        // ユーザー情報取得
-        var user = await User.findOne({ id: id });
+      // ユーザー情報取得
+      var user = await User.findOne({ id: id });
 
-        if (!user) {
-          return false;
-        }
+      if (!user) {
+        return false;
+      }
 
-        return user;
+      return user;
     }
-}
+  }
 };
 

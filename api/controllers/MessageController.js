@@ -6,42 +6,69 @@
  */
 
 module.exports = {
-	create: function(req, res) {
+    create: function (req, res) {
         var ip = '0.0.0.0';
         if (req.socket && req.socket.handshake.address) {
-          ip = req.socket.handshake.address;
+            ip = req.socket.handshake.address;
         }
         var body = req.param('body');
         var channel = req.param('channel');
 
+        console.log(body);
+
         // セッションからユーザーIDを取得
         var user_id = req.session.passport.user;
-        if (!body || !user_id){
-            return res.json({success: false, message: 'バリデーションエラー'});
+        if (!body || !user_id) {
+            console.log('バリデーションエラー');
+            return res.json({ success: false, message: 'バリデーションエラー' });
         } else {
-            Message.create({ip: ip, body: body, user_id: user_id, channel: channel}).exec(function (err, res2) {
+            Message.create({ ip: ip, body: body, user_id: user_id, channel: channel }).exec(function (err, res2) {
                 // TODO エラーハンドリングを考える
                 var query = 'SELECT *, message.createdAt as createdAt FROM message INNER JOIN user ON message.user_id = user.id WHERE message.id = ' + res2.id;
 
-                Message.query(query,function(err,data){
+                Message.query(query, async function (err, data1) {
                     // 自分以外の人にメッセージ送信
-                    sails.sockets.broadcast('lobby','message',{verb: 'created', data: data[0]}, req);
-                    sails.sockets.broadcast('lobby','typing',{verb: 'stop', data: user_id}, req);
-                    return res.json(data[0]);
+                    sails.sockets.broadcast('lobby', 'message', { verb: 'created', data: data1[0] }, req);
+                    sails.sockets.broadcast('lobby', 'typing', { verb: 'stop', data: user_id }, req);
+
+                    console.log('完了');
+                    return res.json(data1[0]);
                 });
             });
         }
     },
+    postAi: async function (req, res) {
+        var body = req.param('body');
+        var channel = req.param('channel');
+        if (!body) {
+            return res.json({ success: false, message: 'バリデーションエラー' });
+        } else {
+            if (channel == 8 && body.indexOf('@ai') === 0) {
+                // AIへのメンションがついている場合
+                sails.sockets.broadcast('lobby', 'typing', { verb: 'start_ai', data: 'サポートAI' });
+                var resAi = await AiService.execAi(body.replace("@ai", ""));
+                Message.create({ ip: '', body: resAi, user_id: '101873', channel: channel }).exec(function (err, res3) {
+                    var query = 'SELECT *, message.createdAt as createdAt FROM message INNER JOIN user ON message.user_id = user.id WHERE message.id = ' + res3.id;
+                    Message.query(query, function (err, data) {
+                        // 自分以外の人にメッセージ送信
+                        sails.sockets.broadcast('lobby', 'message', { verb: 'created', data: data[0] }, req);
+                        sails.sockets.broadcast('lobby', 'typing', { verb: 'stop', data: 'サポートAI' });
+                        return res.json(data[0]);
+                    });
+                });
+            }
+        }
+    },
     // 一覧表示用
-    findAll: function(req, res) {
-        
+    findAll: function (req, res) {
+
         var limit = 50;
         if (req.query.limit != undefined && req.query.limit != '') {
             limit = req.query.limit;
         }
 
         var query = '';
-        for (var i=1;i <= 8;i++) {
+        for (var i = 1; i <= 8; i++) {
             query = query + '(select *, msg.createdAt as createdAt from message msg INNER JOIN user ON  msg.user_id = user.id where channel=' + i + ' order by msg.createdAt desc limit ' + limit + ')';
             if (i != 8) {
                 query = query + ' UNION ';
@@ -49,19 +76,19 @@ module.exports = {
         }
 
         //var query = 'SELECT *, msg.createdAt as createdAt FROM message msg INNER JOIN user ON  msg.user_id = user.id WHERE ( SELECT COUNT(*) FROM message msg2 WHERE msg2.channel = msg.channel AND msg2.createdAt > msg.createdAt ) < ' + limit + ' ORDER BY msg.channel DESC, msg.createdAt DESC';
-        
+
         var user_id = req.session.passport.user;
-        if(global.gc) {
+        if (global.gc) {
             global.gc(); // メモリ解放
         }
-        Message.query(query,function(err,data){
-            var resData = {data: data, current_user_id: user_id};
+        Message.query(query, function (err, data) {
+            var resData = { data: data, current_user_id: user_id };
             return res.json(resData);
         });
     },
     // ログ検索
-    findLog: function(req, res) {
-        
+    findLog: function (req, res) {
+
         var limit = 3000;
         // 一旦固定
         /*if (req.query.limit != undefined && req.query.limit != '') {
@@ -81,26 +108,26 @@ module.exports = {
 
         var query = 'SELECT *, msg.createdAt as createdAt FROM message msg INNER JOIN user ON  msg.user_id = user.id WHERE ' + dateWhere + ' ORDER BY msg.channel DESC, msg.createdAt DESC LIMIT ' + limit;
         var user_id = req.session.passport.user;
-        if(global.gc) {
+        if (global.gc) {
             global.gc(); // メモリ解放
         }
-        Message.query(query,function(err,data){
-            var resData = {data: data, current_user_id: user_id};
+        Message.query(query, function (err, data) {
+            var resData = { data: data, current_user_id: user_id };
             return res.json(resData);
         });
     },
-    typingStart: async function(req, res) {
+    typingStart: async function (req, res) {
         var channel = req.param('channel');
 
         // セッションからユーザーIDを取得
         var user = await UserService.getLoginUser(req);
         if (!user) {
-            return res.serverError({code: consts.res_code.SYSTEM_ERR, message: 'ユーザー情報が取得できませんでした。'});
+            return res.serverError({ code: consts.res_code.SYSTEM_ERR, message: 'ユーザー情報が取得できませんでした。' });
         }
         var userName = user.username; // ユーザー名
         // 自分以外の人に送信
-        sails.sockets.broadcast('lobby','typing',{verb: 'start', data: userName}, req);
-        return res.json(user_id);
+        sails.sockets.broadcast('lobby', 'typing', { verb: 'start', data: userName }, req);
+        return true;
     }
 };
 

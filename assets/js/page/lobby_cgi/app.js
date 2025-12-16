@@ -5,57 +5,58 @@ $.ajax({
     url: '/user/getLoginUser',
     dataType: 'json',
     async: false,
-    success: function(response) {
+    success: function (response) {
         responseJson = response;
     },
-    error: function() {
+    error: function () {
         console.log('ログイン情報取得失敗');
     }
 });
 var userInfo = responseJson.user;
 
 // チャット取得(デザインは一旦cgi用に作成)
-io.socket.get("/message/findAll?limit=50", {}, function(data) {
+io.socket.get("/message/findAll?limit=50", {}, function (data) {
     var messages = data.data;
     var current_user_id = data.current_user_id;
     for (var i = messages.length - 1; i >= 0; i--) {
         var ip = messages[i].ip;
-        if ( ip == null ) {
+        if (ip == null) {
             ip = '';
         }
         var d = new Date(messages[i].createdAt);
-        var year  = d.getFullYear();
+        var year = d.getFullYear();
         var month = d.getMonth() + 1;
-        var day   = d.getDate();
-        var hour  = ( d.getHours()   < 10 ) ? '0' + d.getHours()   : d.getHours();
-        var min   = ( d.getMinutes() < 10 ) ? '0' + d.getMinutes() : d.getMinutes();
-        var sec   = ( d.getSeconds() < 10 ) ? '0' + d.getSeconds() : d.getSeconds();
+        var day = d.getDate();
+        var hour = (d.getHours() < 10) ? '0' + d.getHours() : d.getHours();
+        var min = (d.getMinutes() < 10) ? '0' + d.getMinutes() : d.getMinutes();
+        var sec = (d.getSeconds() < 10) ? '0' + d.getSeconds() : d.getSeconds();
         var createDate = year + '-' + month + '-' + day + ' ' + hour + ':' + min + ':' + sec;
+        var kunsyoStr = (messages[i].kunsyo) ? '<img src="https://manadream.net/cgi3/symbols/symbol_' + messages[i].kunsyo + '.png" width="20" height="20" align="middle" style="border: none">' : "";
         if (current_user_id == messages[i].id) {
-            $("#chat-frame" + messages[i].channel).prepend('<p class="chat-talk mytalk"><span class="talk-user"><span class="talk-icon">' + messages[i].username + "</span></span><span class='talk-content'>" + messages[i].body + '&nbsp&nbsp&nbsp<label class="created-date">--' + createDate + '</label></span></p>');
+            $("#chat-frame" + messages[i].channel).prepend('<p class="chat-talk mytalk"><span class="talk-user"><span class="talk-icon">' + messages[i].username + kunsyoStr + "</span></span><span class='talk-content'>" + messages[i].body + '&nbsp&nbsp&nbsp<label class="created-date">--' + createDate + '</label></span></p>');
         } else {
-            $("#chat-frame" + messages[i].channel).prepend('<p class="chat-talk"><span class="talk-user"><span class="talk-icon">' + messages[i].username + "</span><span class='talk-ip'>" + ip + "</span></span><span class='talk-content'>" + messages[i].body + '&nbsp&nbsp&nbsp<label class="created-date">--' + createDate + '</label></span></p>');
+            $("#chat-frame" + messages[i].channel).prepend('<p class="chat-talk"><span class="talk-user"><span class="talk-icon">' + messages[i].username + kunsyoStr + "</span><span class='talk-ip'>" + ip + "</span></span><span class='talk-content'>" + messages[i].body + '&nbsp&nbsp&nbsp<label class="created-date">--' + createDate + '</label></span></p>');
         }
     }
 });
 
 // チャットルームに入る
-io.socket.get('/user/listen', {}, function() {});
+io.socket.get('/user/listen', {}, function () { });
 
 // チャット受信
-io.socket.on('message', function(message) {
+io.socket.on('message', function (message) {
     var ip = message.data.ip;
-    if ( ip == null ) {
+    if (ip == null) {
         ip = '';
     }
     if (message.verb == "created") {
         var d = new Date(message.data.createdAt);
-        var year  = d.getFullYear();
+        var year = d.getFullYear();
         var month = d.getMonth() + 1;
-        var day   = d.getDate();
-        var hour  = ( d.getHours()   < 10 ) ? '0' + d.getHours()   : d.getHours();
-        var min   = ( d.getMinutes() < 10 ) ? '0' + d.getMinutes() : d.getMinutes();
-        var sec   = ( d.getSeconds() < 10 ) ? '0' + d.getSeconds() : d.getSeconds();
+        var day = d.getDate();
+        var hour = (d.getHours() < 10) ? '0' + d.getHours() : d.getHours();
+        var min = (d.getMinutes() < 10) ? '0' + d.getMinutes() : d.getMinutes();
+        var sec = (d.getSeconds() < 10) ? '0' + d.getSeconds() : d.getSeconds();
         var createDate = year + '-' + month + '-' + day + ' ' + hour + ':' + min + ':' + sec;
         $("#chat-frame" + message.data.channel).prepend('<p class="chat-talk"><span class="talk-user"><span class="talk-icon">' + message.data.username + "</span><span class='talk-ip'>" + ip + "</span></span><span class='talk-content'>" + message.data.body + '&nbsp&nbsp&nbsp<label class="created-date">--' + createDate + '</label></span></p>');
     }
@@ -63,14 +64,14 @@ io.socket.on('message', function(message) {
 
 $(".chat-frame").hide();
 $("#chat-frame1").show();
-$('input[name=channel]').change( function(){
+$('input[name=channel]').change(function () {
     var channel = $("input[name='channel']:checked").val();
     $(".chat-frame").hide('slow');
     $("#chat-frame" + channel).show('slow');
 });
 
 $(".channels").hide();
-$('#chat-channel-button').on('click', function(){
+$('#chat-channel-button').on('click', function () {
     if ($('.channels').css('display') == 'block') {
         $(".channels").hide('slow');
     } else {
@@ -79,40 +80,60 @@ $('#chat-channel-button').on('click', function(){
 });
 
 // チャット投稿
-$('#chat-send-button').on('click', function() {
+$('#chat-send-button').on('click', function () {
     var $text = $('#chat-textarea');
     var $channel = $("input[name='channel']:checked").val();
     console.log($channel);
-    $.getJSON('//api.ipstack.com/check?access_key=54e37314186c454b8da7e3d569673972', function(data) {
+    $.getJSON('//api.ipstack.com/check?access_key=54e37314186c454b8da7e3d569673972', function (data) {
         var ip = data.ip;
-    
+
         var msg = $text.val();
-        
+
         io.socket.post("/message", {
             ip: ip,
             body: msg,
             channel: $channel
-        }, function(res) {
+        }, function (res) {
             var ip = res.ip;
-            if ( ip == null ) {
+            if (ip == null) {
                 ip = '';
             }
             var d = new Date(res.createdAt);
-            var year  = d.getFullYear();
+            var year = d.getFullYear();
             var month = d.getMonth() + 1;
-            var day   = d.getDate();
-            var hour  = ( d.getHours()   < 10 ) ? '0' + d.getHours()   : d.getHours();
-            var min   = ( d.getMinutes() < 10 ) ? '0' + d.getMinutes() : d.getMinutes();
-            var sec   = ( d.getSeconds() < 10 ) ? '0' + d.getSeconds() : d.getSeconds();
+            var day = d.getDate();
+            var hour = (d.getHours() < 10) ? '0' + d.getHours() : d.getHours();
+            var min = (d.getMinutes() < 10) ? '0' + d.getMinutes() : d.getMinutes();
+            var sec = (d.getSeconds() < 10) ? '0' + d.getSeconds() : d.getSeconds();
             var createDate = year + '-' + month + '-' + day + ' ' + hour + ':' + min + ':' + sec;
             $("#chat-frame" + res.channel).prepend('<p class="chat-talk mytalk"><span class="talk-user"><span class="talk-icon">' + res.username + "</span></span><span class='talk-content'>" + res.body + '&nbsp&nbsp&nbsp<label class="created-date">--' + createDate + '</label></span></p>');
             $text.val('');
+
+            if ($channel == 8 && msg.indexOf('@ai') === 0) {
+                // AIへのメンションがついている場合
+                io.socket.post("/message/postAi", {
+                    body: msg,
+                    channel: $channel
+                }, function (res) {
+                    ip = '';
+                    var d = new Date(res.createdAt);
+                    var year = d.getFullYear();
+                    var month = d.getMonth() + 1;
+                    var day = d.getDate();
+                    var hour = (d.getHours() < 10) ? '0' + d.getHours() : d.getHours();
+                    var min = (d.getMinutes() < 10) ? '0' + d.getMinutes() : d.getMinutes();
+                    var sec = (d.getSeconds() < 10) ? '0' + d.getSeconds() : d.getSeconds();
+                    var createDate = year + '-' + month + '-' + day + ' ' + hour + ':' + min + ':' + sec;
+                    $("#chat-frame" + $channel).prepend('<p class="chat-talk"><span class="talk-user"><span class="talk-icon">' + res.username + "</span><span class='talk-ip'>" + ip + "</span></span><span class='talk-content'>" + res.body + '&nbsp&nbsp&nbsp<label class="created-date">--' + createDate + '</label></span></p>');
+                    $text.val('');
+                });
+            }
         });
     });
 });
 
 // ユーザー一覧受信
-io.socket.on('user_list', function(param) {
+io.socket.on('user_list', function (param) {
     if (param.verb == "created") {
         // ユーザー追加
         userListVm.addUserList(param.data);
@@ -126,19 +147,19 @@ io.socket.on('user_list', function(param) {
 var userListVm = new Vue({
     el: '.user-list',
     data: {
-      userList: []
+        userList: []
     },
     methods: {
-        addUserList: function(user) {
-            for(var userId in user){
+        addUserList: function (user) {
+            for (var userId in user) {
                 // 自分以外のユーザーの場合追加
                 if (userId != userInfo.user_id) {
                     userListVm.$set(userListVm.userList, userId, user[userId]);
                 }
             }
         },
-        deleteUserList: function(user) {
-            for(var userId in user){
+        deleteUserList: function (user) {
+            for (var userId in user) {
                 userListVm.$delete(userListVm.userList, userId);
             }
         }
@@ -146,9 +167,9 @@ var userListVm = new Vue({
 });
 
 // ユーザー一覧取得
-io.socket.post('/userList', {listFlg: 1}, function (res) {
+io.socket.post('/userList', { listFlg: 1 }, function (res) {
     var userList = {};
-    for(var userId in res.userList){
+    for (var userId in res.userList) {
         // 自分以外のユーザーを格納
         if (userId != userInfo.user_id) {
             userList[userId] = res.userList[userId];
@@ -159,14 +180,14 @@ io.socket.post('/userList', {listFlg: 1}, function (res) {
 
 // var isActive;
 
-window.onfocus = function () { 
-  //isActive = true; 
-  parent.postMessage({isActive: true}, '*');
+window.onfocus = function () {
+    //isActive = true; 
+    parent.postMessage({ isActive: true }, '*');
 };
 
-window.onblur = function () { 
-  //isActive = false; 
-  parent.postMessage({isActive: false}, '*');
+window.onblur = function () {
+    //isActive = false; 
+    parent.postMessage({ isActive: false }, '*');
 };
 
 
@@ -178,31 +199,37 @@ window.onblur = function () {
 // } , 5000);
 
 let typing = false;
-io.socket.on("typing", function(typinguser){
-    if (typinguser.verb == "start") {
-	    $('#typing-user').text(typinguser.data + 'が入力中です');
+io.socket.on("typing", function (typinguser) {
+    if (typinguser.verb == "start" || typinguser.verb == "start_ai") {
+        $('#typing-user').text(typinguser.data + 'が入力中です');
     }
-    
-    setTimeout(function(){
+
+    let timeOfView = 3000;
+    if (typinguser.verb == "start_ai") {
+        timeOfView = 10000;
+    }
+
+    setTimeout(function () {
         $('#typing-user').text("");
-    }, 3000);
+    }, timeOfView);
 });
-io.socket.on("typing", function(typinguser){
-	if (typinguser.verb == "stop") {
-	    $('#typing-user').text("");
+
+io.socket.on("typing", function (typinguser) {
+    if (typinguser.verb == "stop") {
+        $('#typing-user').text("");
     }
 });
 
 // 入力開始と同時にタイピンスタートを伝える
-$("#chat-textarea").keyup(function(){
+$("#chat-textarea").keyup(function () {
     if (!typing) {
         typing = true;
         var $channel = $("input[name='channel']:checked").val();
         io.socket.post("/message/typingStart", {
             channel: $channel
         });
-        
-        setTimeout(function(){
+
+        setTimeout(function () {
             typing = false;
         }, 3000);
     }
